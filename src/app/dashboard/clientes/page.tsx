@@ -1,16 +1,16 @@
-import Link from "next/link"
-import { Button } from "@/src/components/ui/button"
-import { DataTable } from "@/src/components/ui/data-table"
-import { StatusBadge } from "@/src/components/ui/status-badge"
-import { PageHeader } from "@/src/components/layout/page-header"
-import { ClienteActions } from "@/src/components/clientes/cliente-actions"
-import { Plus, FileDown } from "lucide-react"
-import { getClientes } from "./actions"
-import { formatCurrency } from "@/src/lib/utils"
-import type { Cliente } from "@/src/types"
+import Link from "next/link";
+import { Button } from "@/src/components/ui/button";
+import { DataTable } from "@/src/components/ui/data-table";
+import { StatusBadge } from "@/src/components/ui/status-badge";
+import { PageHeader } from "@/src/components/layout/page-header";
+import { ClienteActions } from "@/src/components/clientes/cliente-actions";
+import { Plus, FileDown } from "lucide-react";
+import { getClientes } from "./actions";
+import { formatCurrency } from "@/src/lib/utils";
+import type { Customer } from "@/src/types";
 
 export default async function ClientesPage() {
-  const clientes = await getClientes()
+  const clientes = await getClientes();
 
   const columns = [
     {
@@ -33,24 +33,27 @@ export default async function ClientesPage() {
     {
       key: "totalCompras",
       header: "Total de Compras",
-      cell: (cliente: Cliente) => formatCurrency(cliente.totalCompras),
+      cell: (customer: Customer) => formatCurrency(customer.totalPurchases),
     },
     {
       key: "status",
       header: "Status",
-      cell: (cliente: Cliente) => <StatusBadge status={cliente.status} />,
+      cell: (customer: Customer) => <StatusBadge status={customer.status} />,
     },
     {
       key: "actions",
       header: "Ações",
       className: "text-right",
-      cell: (cliente: Cliente) => <ClienteActions cliente={cliente} />,
+      cell: (customer: Customer) => <ClienteActions cliente={customer} />,
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Clientes" description="Gerencie os clientes da sua loja.">
+      <PageHeader
+        title="Clientes"
+        description="Gerencie os clientes da sua loja."
+      >
         <Button variant="outline">
           <FileDown className="mr-2 h-4 w-4" /> Exportar
         </Button>
@@ -63,5 +66,5 @@ export default async function ClientesPage() {
 
       <DataTable data={clientes} columns={columns} />
     </div>
-  )
+  );
 }
