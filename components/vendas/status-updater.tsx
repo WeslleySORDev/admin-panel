@@ -14,7 +14,6 @@ export function StatusUpdater({ venda }: StatusUpdaterProps) {
   return (
     <form
       action={async (formData: FormData) => {
-        "use server"
         const status = formData.get("status") as "Pendente" | "Concluído" | "Cancelado" | "Em processamento"
         await atualizarStatusVenda(venda.id, status)
       }}
