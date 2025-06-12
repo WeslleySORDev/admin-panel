@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/src/components/ui/dropdown-menu"
-import { Button } from "@/src/components/ui/button"
-import { Edit, MoreHorizontal, Trash2 } from "lucide-react"
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu";
+import { Button } from "@/src/components/ui/button";
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 
 interface ProdutoActionsProps {
-  produto: {
-    id: string
-    nome: string
-  }
+  product: {
+    id: string;
+    name: string;
+  };
 }
 
-export function ProdutoActions({ produto }: ProdutoActionsProps) {
+export function ProdutoActions({ product }: ProdutoActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,7 +27,7 @@ export function ProdutoActions({ produto }: ProdutoActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={`/dashboard/produtos/${produto.id}`}>
+        <Link href={`/dashboard/produtos/${product.id}`}>
           <DropdownMenuItem>
             <Edit className="mr-2 h-4 w-4" />
             Editar
@@ -45,5 +50,5 @@ export function ProdutoActions({ produto }: ProdutoActionsProps) {
         </form> */}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

@@ -8,7 +8,7 @@ import { PageHeader } from "@/src/components/layout/page-header";
 import { ProdutoActions } from "@/src/components/produtos/produto-actions";
 import { Plus, FileDown } from "lucide-react";
 import { formatCurrency } from "@/src/lib/utils";
-import type { Produto } from "@/src/types";
+import type { Product } from "@/src/types";
 import { useProducts } from "@/src/contexts/ProductContext";
 
 export default function ProdutosPage() {
@@ -32,7 +32,7 @@ export default function ProdutosPage() {
       key: "preco",
       header: "Preço",
       className: "text-right",
-      cell: (produto: Produto) => formatCurrency(produto.preco),
+      cell: (product: Product) => formatCurrency(product.price),
     },
     {
       key: "estoque",
@@ -41,13 +41,13 @@ export default function ProdutosPage() {
     {
       key: "status",
       header: "Status",
-      cell: (produto: Produto) => <StatusBadge status={produto.status} />,
+      cell: (product: Product) => <StatusBadge status={product.status} />,
     },
     {
       key: "actions",
       header: "Ações",
       className: "text-right",
-      cell: (produto: Produto) => <ProdutoActions produto={produto} />,
+      cell: (product: Product) => <ProdutoActions product={product} />,
     },
   ];
 

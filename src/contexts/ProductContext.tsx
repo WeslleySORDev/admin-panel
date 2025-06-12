@@ -5,6 +5,8 @@ import { DEFAULT_PRODUCTS } from "../constants";
 
 interface ProductContextType {
   products: Product[];
+  createProduct: (product: Product) => void;
+  updateProduct: (id: string, product: Product) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -12,12 +14,45 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [products, setProduct] = useState<Product[]>(DEFAULT_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>(DEFAULT_PRODUCTS);
 
+  const createProduct = (product: Product) => {
+    const newProduct: Product = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      stock: product.stock,
+      status: product.status,
+      image: product.image,
+    };
+    setProducts([...products, newProduct]);
+  };
+
+  const updateProduct = (id: string, product: Product) => {
+    const index = products.findIndex((p) => p.id === id);
+    let updatedProducts = [...products];
+    if (index !== -1) {
+      updatedProducts[index] = {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        stock: product.stock,
+        status: product.status,
+        image: product.image,
+      };
+    }
+    setProducts(updatedProducts);
+  };
   return (
     <ProductContext.Provider
       value={{
         products,
+        createProduct,
+        updateProduct,
       }}
     >
       {children}
