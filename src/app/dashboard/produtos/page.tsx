@@ -21,21 +21,21 @@ export default function ProdutosPage() {
       className: "w-[100px]",
     },
     {
-      key: "nome",
+      key: "name",
       header: "Nome",
     },
     {
-      key: "categoria",
+      key: "category",
       header: "Categoria",
     },
     {
-      key: "preco",
+      key: "price",
       header: "Preço",
       className: "text-right",
       cell: (product: Product) => formatCurrency(product.price),
     },
     {
-      key: "estoque",
+      key: "stock",
       header: "Estoque",
     },
     {

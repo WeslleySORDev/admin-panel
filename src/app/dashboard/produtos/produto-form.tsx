@@ -56,11 +56,12 @@ export default function ProdutoForm({ product }: ProdutoFormProps) {
         : "/placeholder.svg?height=200&width=200",
     };
     try {
-      if (product) {
-        updateProduct(product.id, product);
-      } else {
-        createProduct(product);
-      }
+      createProduct(product);
+      // if (product) {
+      //   updateProduct(product.id, product);
+      // } else {
+      //   createProduct(product);
+      // }
     } catch (error) {
       console.error("Erro ao salvar produto:", error);
       setIsSubmitting(false);
