@@ -5,13 +5,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/src/components/ui/button"
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react"
 import { deleteCliente } from "@/src/app/dashboard/clientes/actions"
-import type { Cliente } from "@/src/types"
+import type { Customer } from "@/src/types"
 
 interface ClienteActionsProps {
-  cliente: Cliente
+  customer: Customer
 }
 
-export function ClienteActions({ cliente }: ClienteActionsProps) {
+export function ClienteActions({ customer }: ClienteActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,18 +21,18 @@ export function ClienteActions({ cliente }: ClienteActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={`/dashboard/clientes/${cliente.id}`}>
+        <Link href={`/dashboard/clientes/${customer.id}`}>
           <DropdownMenuItem>
             <Edit className="mr-2 h-4 w-4" />
             Editar
           </DropdownMenuItem>
         </Link>
-        <form action={deleteCliente.bind(null, cliente.id)}>
+        <form action={deleteCliente.bind(null, customer.id)}>
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"
             onSelect={(e) => {
               e.preventDefault()
-              if (confirm(`Deseja realmente excluir o cliente "${cliente.nome}"?`)) {
+              if (confirm(`Deseja realmente excluir o cliente "${customer.name}"?`)) {
                 const form = e.currentTarget.closest("form")
                 form?.requestSubmit()
               }
