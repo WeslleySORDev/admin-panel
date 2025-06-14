@@ -94,13 +94,15 @@ export const NAV_ITEMS = [
 ];
 
 export const CATEGORIAS_PRODUTO = [
-  "Vestuário",
-  "Calçados",
-  "Acessórios",
-  "Eletrônicos",
-  "Casa",
-  "Esportes",
-];
+  "Imobiliario",
+  "Automotivo",
+  "Geral",
+] as const;
+
+export const statusOptions = [
+  { value: "Ativo", label: "Ativo" },
+  { value: "Inativo", label: "Inativo" },
+] as const;
 
 export const ESTADOS_BRASIL = [
   { value: "AC", label: "Acre" },

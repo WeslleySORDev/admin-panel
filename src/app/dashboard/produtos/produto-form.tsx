@@ -12,18 +12,87 @@ import {
   TextareaField,
   SelectField,
 } from "@/src/components/forms/form-field";
-import { CATEGORIAS_PRODUTO } from "@/src/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { CATEGORIAS_PRODUTO, statusOptions } from "@/src/constants";
 import { ImagePlus } from "lucide-react";
 import type { Product } from "@/src/types";
 import { useProducts } from "@/src/contexts/ProductContext";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/src/components/ui/form";
+import { Input } from "@/src/components/ui/input";
 
 interface ProdutoFormProps {
   product?: Product;
 }
 
+const statusValues = statusOptions.map((status) => status.value);
+
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(5, {
+      message: "Nome precisa ter pelo menos 5 caracteres.",
+    })
+    .max(12, {
+      message: "Nome precisa ter no máximo 12 caracteres.",
+    }),
+  description: z
+    .string()
+    .min(5, {
+      message: "Descrição precisa ter pelo menos 5 caracteres.",
+    })
+    .max(20, {
+      message: "Descrição precisa ter no máximo 20 caracteres.",
+    }),
+  price: z.number().min(0, "O preço não pode ser negativo.").default(0),
+  category: z.enum(CATEGORIAS_PRODUTO, {
+    errorMap: (issue, ctx) => {
+      if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+        return {
+          message: `A categoria deve ser uma das seguintes: ${CATEGORIAS_PRODUTO.join(
+            ", "
+          )}`,
+        };
+      }
+      return { message: ctx.defaultError };
+    },
+  }),
+  stock: z.number().min(0, "O estoque não pode ser negativo.").default(0),
+  status: z.enum(statusValues as [string, ...string[]], {
+    errorMap: (issue, ctx) => {
+      if (issue.code === z.ZodIssueCode.invalid_enum_value) {
+        return {
+          message: `O status deve ser '${statusValues.join("' ou '")}'.`,
+        };
+      }
+      return { message: ctx.defaultError };
+    },
+  }),
+});
+
 export default function ProdutoForm({ product }: ProdutoFormProps) {
   const { createProduct, updateProduct, products } = useProducts();
   const router = useRouter();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      stock: 0,
+      price: 0,
+      category: "Imobiliario",
+      status: "Ativo",
+    },
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const categoriaOptions = CATEGORIAS_PRODUTO.map((categoria) => ({
@@ -31,10 +100,11 @@ export default function ProdutoForm({ product }: ProdutoFormProps) {
     label: categoria,
   }));
 
-  const statusOptions = [
-    { value: "Ativo", label: "Ativo" },
-    { value: "Inativo", label: "Inativo" },
-  ];
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(values);
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,130 +138,138 @@ export default function ProdutoForm({ product }: ProdutoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <InputField
-                label="Nome do Produto"
-                name="name"
-                placeholder="Digite o nome do produto"
-                defaultValue={product?.name}
-                required
-              />
-
-              <TextareaField
-                label="Descrição"
-                name="description"
-                placeholder="Digite a descrição do produto"
-                defaultValue={product?.description}
-                required
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <InputField
-                  label="Preço (R$)"
-                  name="price"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0,00"
-                  defaultValue={product?.price}
-                  required
-                />
-
-                <InputField
-                  label="Estoque"
-                  name="stock"
-                  type="number"
-                  min="0"
-                  placeholder="0"
-                  defaultValue={product?.stock}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <SelectField
-                  label="Categoria"
-                  name="category"
-                  placeholder="Selecione uma categoria"
-                  defaultValue={product?.category || "Vestuário"}
-                  options={categoriaOptions}
-                />
-
-                <SelectField
-                  label="Status"
-                  name="status"
-                  placeholder="Selecione o status"
-                  defaultValue={product?.status || "Ativo"}
-                  options={statusOptions}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Imagem do Produto</label>
-                <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-md p-6 h-[300px]">
-                  {product?.image ? (
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={product.image || "/placeholder.svg"}
-                        alt={product.name}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-center">
-                      <ImagePlus className="h-10 w-10 text-muted-foreground mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Arraste uma imagem ou clique para fazer upload
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        PNG, JPG ou WEBP (máx. 2MB)
-                      </p>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="mt-4"
-                        onClick={() =>
-                          alert(
-                            "Funcionalidade de upload não implementada neste exemplo"
-                          )
-                        }
-                      >
-                        Selecionar Arquivo
-                      </Button>
-                    </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome</FormLabel>
+                      <FormControl>
+                        <Input placeholder="shadcn" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This is your public display name.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
                   )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Descrição</FormLabel>
+                      <FormControl>
+                        <Input placeholder="shadcn" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This is your public display description.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Preço(R$)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="shadcn"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          This is your public display name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="stock"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Estoque</FormLabel>
+                        <FormControl>
+                          <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          This is your public display name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Categoria</FormLabel>
+                        <FormControl>
+                          <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          This is your public display name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Status</FormLabel>
+                        <FormControl>
+                          <Input placeholder="shadcn" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          This is your public display name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="flex justify-end space-x-4 mt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              disabled={isSubmitting}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? "Salvando..."
-                : product
-                ? "Atualizar Produto"
-                : "Criar Produto"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </form>
+            <div className="flex justify-end space-x-4 mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                disabled={isSubmitting}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? "Salvando..."
+                  : product
+                  ? "Atualizar Produto"
+                  : "Criar Produto"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </form>
+    </Form>
   );
 }
