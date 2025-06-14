@@ -1,18 +1,20 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import ProdutoForm from "../produto-form";
+import ProdutoForm from "../novo/components/produto-form";
 import { useProducts } from "@/src/contexts/ProductContext";
+import React from "react";
 
 interface ProdutoEditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function ProdutoEditPage({
-  params,
+export default function ProdutoEditPage({
+  params: paramsPromise,
 }: ProdutoEditPageProps) {
+  const params = React.use(paramsPromise);
   const { products } = useProducts();
   const product = products.find((p) => p.id === params.id) || null;
 
@@ -29,7 +31,7 @@ export default async function ProdutoEditPage({
         </p>
       </div>
 
-      <ProdutoForm produto={product} />
+      <ProdutoForm product={product} />
     </div>
   );
 }

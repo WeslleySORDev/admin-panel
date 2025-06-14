@@ -5,7 +5,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: string;
+  category: "Imobiliario" | "Automotivo" | "Geral";
   stock: number;
   status: "Ativo" | "Inativo";
   image?: string;
@@ -21,7 +21,7 @@ export interface Customer {
   state: string;
   cep: string;
   totalPurchases: number;
-  status: "Ativo" | "Inativo";
+  status: string;
 }
 
 export interface Sale {
