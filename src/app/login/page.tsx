@@ -1,53 +1,66 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/src/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card"
-import { Alert, AlertDescription } from "@/src/components/ui/alert"
-import { InputField } from "@/src/components/forms/form-field"
-import { useAuth } from "@/src/hooks/use-auth"
-import { AlertCircle } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/src/components/ui/card";
+import { Alert, AlertDescription } from "@/src/components/ui/alert";
+import { InputField } from "@/src/components/forms/form-field";
+import { useAuth } from "@/src/hooks/use-auth";
+import { AlertCircle } from "lucide-react";
+import { Label } from "@/src/components/ui/label";
+import { Input } from "@/src/components/ui/input";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const { login } = useAuth()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
     try {
-      const success = await login(email, password)
+      const success = await login(email, password);
 
       if (success) {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        router.push("/dashboard")
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        router.push("/dashboard");
       } else {
-        setError("Email ou senha inválidos")
+        setError("Email ou senha inválidos");
       }
     } catch {
-      setError("Ocorreu um erro ao fazer login")
+      setError("Ocorreu um erro ao fazer login");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-muted/40">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Painel Administrativo</CardTitle>
-          <CardDescription className="text-center">Entre com suas credenciais para acessar o painel</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">
+            Painel Administrativo
+          </CardTitle>
+          <CardDescription className="text-center">
+            Entre com suas credenciais para acessar o painel
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {error && (
@@ -58,8 +71,26 @@ export default function LoginPage() {
           )}
           <form onSubmit={handleLogin}>
             <div className="grid gap-4">
-              <InputField label="Email" name="email" type="email" placeholder="admin@loja.com" required />
-              <InputField label="Senha" name="password" type="password" placeholder="••••••••" required />
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="admin@loja.com"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Email</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Entrando..." : "Entrar"}
               </Button>
@@ -71,5 +102,5 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
