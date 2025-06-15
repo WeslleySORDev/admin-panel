@@ -17,7 +17,7 @@ import { ProductNameAndDescription } from "./product-name-and-description";
 import { ProductPriceAndStock } from "./product-price-and-stock";
 import { ProductCategoryAndStatus } from "./product-category-and-status";
 
-interface ProdutoFormProps {
+interface ProductFormProps {
   product?: Product;
 }
 
@@ -66,7 +66,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function ProdutoForm({ product }: ProdutoFormProps) {
+export default function ProductForm({ product }: ProductFormProps) {
   const { createProduct, updateProduct, products } = useProducts();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({

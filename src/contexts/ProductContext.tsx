@@ -7,6 +7,7 @@ interface ProductContextType {
   products: Product[];
   createProduct: (product: Product) => void;
   updateProduct: (id: string, product: Product) => void;
+  deleteProduct: (id: string) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -31,7 +32,7 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({
   };
 
   const updateProduct = (id: string, product: Product) => {
-    const index = products.findIndex((p) => p.id === id);
+    const index = products.findIndex((product) => product.id === id);
     let updatedProducts = [...products];
     if (index !== -1) {
       updatedProducts[index] = {
@@ -47,12 +48,20 @@ export const ProductProvider: React.FC<React.PropsWithChildren> = ({
     }
     setProducts(updatedProducts);
   };
+
+  const deleteProduct = (id: string) => {
+    const index = products.findIndex((product) => product.id === id);
+    let updatedProducts = [...products];
+    updatedProducts.splice(index, 1);
+    setProducts(updatedProducts);
+  };
   return (
     <ProductContext.Provider
       value={{
         products,
         createProduct,
         updateProduct,
+        deleteProduct,
       }}
     >
       {children}

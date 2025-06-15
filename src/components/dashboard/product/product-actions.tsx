@@ -9,15 +9,17 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { Button } from "@/src/components/ui/button";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { useProducts } from "@/src/contexts/ProductContext";
 
-interface ProdutoActionsProps {
+interface ProductActionsProps {
   product: {
     id: string;
     name: string;
   };
 }
 
-export function ProdutoActions({ product }: ProdutoActionsProps) {
+export function ProductActions({ product }: ProductActionsProps) {
+  const { deleteProduct } = useProducts();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,21 +35,29 @@ export function ProdutoActions({ product }: ProdutoActionsProps) {
             Editar
           </DropdownMenuItem>
         </Link>
-        {/* <form action={deleteProduto.bind(null, produto.id)}>
+        <form action={deleteProduct.bind(null, product.id)}>
           <DropdownMenuItem
             className="text-destructive focus:text-destructive"
             onSelect={(e) => {
-              e.preventDefault()
-              if (confirm(`Deseja realmente excluir o produto "${produto.nome}"?`)) {
-                const form = e.currentTarget.closest("form")
-                form?.requestSubmit()
+              e.preventDefault();
+              if (
+                confirm(`Deseja realmente excluir o produto "${product.name}"?`)
+              ) {
+                if (e.currentTarget instanceof HTMLElement) {
+                  const form = e.currentTarget.closest("form");
+                  form?.requestSubmit();
+                } else {
+                  console.warn(
+                    "O currentTarget do evento não é um HTMLElement. Não foi possível encontrar o formulário."
+                  );
+                }
               }
             }}
           >
             <Trash2 className="mr-2 h-4 w-4" />
             Excluir
           </DropdownMenuItem>
-        </form> */}
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   );

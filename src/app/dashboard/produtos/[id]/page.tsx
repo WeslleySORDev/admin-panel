@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import ProdutoForm from "../novo/components/produto-form";
+import ProductForm from "@/src/components/dashboard/product/product-form"
 import { useProducts } from "@/src/contexts/ProductContext";
 import React from "react";
 
@@ -31,7 +31,7 @@ export default function ProdutoEditPage({
         </p>
       </div>
 
-      <ProdutoForm product={product} />
+      <ProductForm product={product} />
     </div>
   );
 }

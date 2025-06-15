@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { Button } from "@/src/components/ui/button";
 import { DataTable } from "@/src/components/ui/data-table";
 import { StatusBadge } from "@/src/components/ui/status-badge";
 import { PageHeader } from "@/src/components/layout/page-header";
-import { ProdutoActions } from "@/src/components/produtos/produto-actions";
+import { ProductActions } from "@/src/components/dashboard/product/product-actions";
 import { Plus, FileDown } from "lucide-react";
 import { formatCurrency } from "@/src/lib/utils";
 import type { Product } from "@/src/types";
@@ -47,7 +47,7 @@ export default function ProdutosPage() {
       key: "actions",
       header: "Ações",
       className: "text-right",
-      cell: (product: Product) => <ProdutoActions product={product} />,
+      cell: (product: Product) => <ProductActions product={product} />,
     },
   ];
 
