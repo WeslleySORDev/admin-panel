@@ -44,7 +44,7 @@ export default async function ClientesPage() {
       key: "actions",
       header: "Ações",
       className: "text-right",
-      cell: (customer: Customer) => <ClienteActions cliente={customer} />,
+      cell: (customer: Customer) => <ClienteActions customer={customer} />,
     },
   ];
 

@@ -16,27 +16,24 @@ export default function ProdutosPage() {
 
   const columns = [
     {
-      key: "id",
-      header: "ID",
-      className: "w-[100px]",
-    },
-    {
       key: "name",
       header: "Nome",
     },
     {
       key: "category",
       header: "Categoria",
+      className: "hidden lg:block"
     },
     {
       key: "price",
       header: "Preço",
-      className: "text-right",
+      className: "text-right hidden lg:block",
       cell: (product: Product) => formatCurrency(product.price),
     },
     {
       key: "stock",
       header: "Estoque",
+      className: "hidden lg:block"
     },
     {
       key: "status",
@@ -61,7 +58,7 @@ export default function ProdutosPage() {
           <FileDown className="mr-2 h-4 w-4" /> Exportar
         </Button>
         <Link href="/dashboard/produtos/novo">
-          <Button>
+          <Button className="w-full">
             <Plus className="mr-2 h-4 w-4" /> Novo Produto
           </Button>
         </Link>

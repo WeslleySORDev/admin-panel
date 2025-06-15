@@ -1,23 +1,23 @@
-import Link from "next/link"
-import { Button } from "@/src/components/ui/button"
-import { DataTable } from "@/src/components/ui/data-table"
-import { StatusBadge } from "@/src/components/ui/status-badge"
-import { PageHeader } from "@/src/components/layout/page-header"
-import { VendaActions } from "@/src/components/vendas/venda-actions"
-import { Plus, FileDown } from "lucide-react"
-import { getVendas } from "./actions"
-import { formatCurrency } from "@/src/lib/utils"
-import type { Venda } from "@/src/types"
+import Link from "next/link";
+import { Button } from "@/src/components/ui/button";
+import { DataTable } from "@/src/components/ui/data-table";
+import { StatusBadge } from "@/src/components/ui/status-badge";
+import { PageHeader } from "@/src/components/layout/page-header";
+import { VendaActions } from "@/src/components/vendas/venda-actions";
+import { Plus, FileDown } from "lucide-react";
+import { getVendas } from "./actions";
+import { formatCurrency } from "@/src/lib/utils";
+import type { Sale } from "@/src/types";
 
 export default async function VendasPage() {
-  const vendas = await getVendas()
+  const vendas = await getVendas();
 
   const columns = [
     {
       key: "id",
       header: "Pedido",
       className: "w-[100px]",
-      cell: (venda: Venda) => `#${venda.id}`,
+      cell: (sale: Sale) => `#${sale.id}`,
     },
     {
       key: "cliente",
@@ -31,7 +31,7 @@ export default async function VendasPage() {
       key: "valor",
       header: "Valor",
       className: "text-right",
-      cell: (venda: Venda) => formatCurrency(venda.valor),
+      cell: (sale: Sale) => formatCurrency(sale.value),
     },
     {
       key: "formaPagamento",
@@ -40,15 +40,15 @@ export default async function VendasPage() {
     {
       key: "status",
       header: "Status",
-      cell: (venda: Venda) => <StatusBadge status={venda.status} />,
+      cell: (sale: Sale) => <StatusBadge status={sale.status} />,
     },
     {
       key: "actions",
       header: "Ações",
       className: "text-right",
-      cell: (venda: Venda) => <VendaActions venda={venda} />,
+      cell: (sale: Sale) => <VendaActions sale={sale} />,
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -65,5 +65,5 @@ export default async function VendasPage() {
 
       <DataTable data={vendas} columns={columns} />
     </div>
-  )
+  );
 }
